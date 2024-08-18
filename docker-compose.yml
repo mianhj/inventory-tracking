@@ -1,0 +1,17 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  inventory-tracking:
+    build: ./
+    ports:
+      - 3000:3000
+    deploy:
+      replicas: 1
+    volumes:
+      - ./:/app
