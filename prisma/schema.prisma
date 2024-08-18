@@ -12,3 +12,42 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String
+  password String
+  Product Product[] @relation("products-to-users")
+  Products Product[] @relation("product-to-lastUpdatedBy")
+
+  StockHistory StockHistory[]
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  price Float
+  stock Int
+  createdById Int
+  createdBy User @relation("products-to-users", fields: [createdById] , references: [id])
+  lastUpdatedById Int
+  lastUpdatedBy User @relation("product-to-lastUpdatedBy", fields: [lastUpdatedById] , references: [id])
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt  
+
+  StockHistory StockHistory[]
+}
+
+
+model StockHistory {
+  id Int @id @default(autoincrement())
+  stock Int
+  difference Int
+  productId Int
+  product Product @relation(fields: [productId], references: [id])
+  createdById Int
+  createdBy User @relation( fields: [createdById] , references: [id])
+}
+
