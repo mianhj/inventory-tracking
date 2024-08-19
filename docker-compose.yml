@@ -17,5 +17,7 @@ services:
       replicas: 1
     volumes:
       - ./:/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/inventory_tracking
 volumes:
   postgres-data:

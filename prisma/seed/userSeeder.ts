@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
 
 type UserEntity = {
   id: number;
@@ -9,20 +8,16 @@ type UserEntity = {
 };
 
 const data: UserEntity[] = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', password: 'abc1234' },
+  {
+    id: 1,
+    name: 'John Doe',
+    email: 'john@example.com',
+    password: '$2a$10$zzIBPunKKTiTXKPEBmP26Oen88EOsdCx445BEzu055aW3y6Ubik2O', // abcd1234
+  },
 ];
 
 export const seedUsers = async () => {
   const prisma = new PrismaClient();
-
-  const modifiedData: UserEntity[] = [];
-
-  for (let d of data) {
-    const salt = await bcrypt.genSalt(10);
-
-    const password = await bcrypt.hash(d.password, salt);
-    modifiedData.push({ ...d, password });
-  }
 
   try {
     await prisma.user.deleteMany();
