@@ -6,6 +6,8 @@ services:
       - '5432:5432'
     environment:
       - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data postgres
 
   inventory-tracking:
     build: ./
@@ -15,3 +17,5 @@ services:
       replicas: 1
     volumes:
       - ./:/app
+volumes:
+  postgres-data:
