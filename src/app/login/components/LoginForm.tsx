@@ -41,7 +41,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 
             if (response.status === 200) {
               // intentionally not using the next.js redirect the page
-              window.location.href = '/';
+              window.location.href = '/products';
             } else {
               throw await response.json();
             }
