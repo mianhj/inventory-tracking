@@ -107,7 +107,7 @@ function ProductsListing({}: ProductsListingProps) {
       cell: (param) => {
         return (
           <Image
-            src={param.getValue()}
+            src={param.getValue<string>()}
             alt="Product"
             width={50}
             height={50}

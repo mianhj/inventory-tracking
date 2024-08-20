@@ -3,6 +3,7 @@ import { validateRequest } from '@/lib/validateRequest';
 import prisma from '@/lib/prisma';
 import { updateProductSchema } from '../schemas/update-product.schema';
 import { getUserFromRequest } from '@/lib/getUserFromRequest';
+import User from '@/types/User';
 
 type RouteParamType = { params: { id: string } };
 
@@ -41,7 +42,7 @@ export async function PUT(req: NextRequest, { params }: RouteParamType) {
   const productId = params.id;
   const body = await req.json();
   const validationError = await validateRequest(updateProductSchema, body);
-  const user = getUserFromRequest(req);
+  const user: User = getUserFromRequest(req);
 
   if (validationError) {
     return NextResponse.json({ error: validationError }, { status: 400 });

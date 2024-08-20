@@ -7,7 +7,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - postgres-data:/var/lib/postgresql/data postgres
+      - postgres-data:/var/lib/postgresql/data
 
   inventory-tracking:
     build: ./
@@ -15,9 +15,10 @@ services:
       - 3000:3000
     deploy:
       replicas: 1
-    volumes:
-      - ./:/app
+    # volumes:
+    #   - ./:/app
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/inventory_tracking
+      - NODE_ENV=production
 volumes:
   postgres-data:

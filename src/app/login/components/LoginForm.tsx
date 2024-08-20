@@ -45,7 +45,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             } else {
               throw await response.json();
             }
-          } catch (err: { error: string }) {
+          } catch (err: any) {
             const { dismiss } = toast({
               title: 'Login Failed',
               description: err.error,

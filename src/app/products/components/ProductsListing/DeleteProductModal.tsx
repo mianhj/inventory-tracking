@@ -52,7 +52,7 @@ function DeleteProductModal({
       } else {
         throw await res.json();
       }
-    } catch (err: { error: string }) {
+    } catch (err: any) {
       const { dismiss } = toast({
         title: 'Delete Failed',
         description: err.error,

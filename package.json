@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:seed": "ts-node prisma/seed/index.ts",
+    "format": "prettier --write ."
   },
   "prisma": {
     "seed": "ts-node prisma/seed/index.ts"
@@ -53,6 +56,8 @@
     "postcss": "^8",
     "prettier": "^3.3.3",
     "prisma": "^5.18.0",
+    "sass": "^1.77.8",
+    "sass-loader": "^16.0.1",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5"

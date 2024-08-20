@@ -38,7 +38,7 @@ function ProductForm({ id }: ProductFormProps) {
           } else {
             throw data;
           }
-        } catch (err: { error: string }) {
+        } catch (err: any) {
           const { dismiss } = toast({
             title: 'Failed To load Product',
             description: err.error,
@@ -54,7 +54,7 @@ function ProductForm({ id }: ProductFormProps) {
       setLoading(false);
       setProduct(null);
     }
-  }, [id]);
+  }, [id, toast]);
 
   return (
     <div>
@@ -126,7 +126,7 @@ function ProductForm({ id }: ProductFormProps) {
             } else {
               throw await response.json();
             }
-          } catch (err: { error: string }) {
+          } catch (err: any) {
             const { dismiss } = toast({
               title: isAdding ? 'Adding Failed' : 'Updating Failed',
               description: err.error,
@@ -198,7 +198,8 @@ function ProductForm({ id }: ProductFormProps) {
                   />
                 </div>
                 {id !== 'add' &&
-                parseInt(initialValues.stock) !== parseInt(values.stock) ? (
+                parseInt(`${initialValues.stock}`) !==
+                  parseInt(`${values.stock}`) ? (
                   <div className="grid gap-1">
                     <AppTextarea
                       label="Stock Update Reason"

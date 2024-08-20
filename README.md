@@ -1,6 +1,14 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Prerequisites
+
+- Docker version 26.1.4, build 5650f9b
+
+# Start Local Server
+
+1. Start Docker
+2. In the root of the project run `docker compose up`
+3. go to localhost:3000
 
 First, run the development server:
 

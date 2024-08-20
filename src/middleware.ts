@@ -5,12 +5,12 @@ import type { NextRequest } from 'next/server';
 export function middleware(req: NextRequest) {
   // Only apply this middleware to specific HTTP methods
   const method = req.method;
-  req.token = req.cookies.get('Authorization')?.value || '';
+  const token = req.cookies.get('Authorization')?.value || '';
 
   // Perform actions for POST , PUT and DELETE requests
   if (
     ['POST', 'PUT', 'DELETE'].includes(method) &&
-    !req.token &&
+    !token &&
     !req.url.includes('login')
   ) {
     return NextResponse.json(
