@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import Product from '@/types/Product';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export type DeleteProductModalProps = {
@@ -27,6 +28,7 @@ function DeleteProductModal({
   product,
   onDelete,
 }: DeleteProductModalProps) {
+  const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
@@ -45,6 +47,8 @@ function DeleteProductModal({
         setTimeout(dismiss, 5000);
         onClose();
         onDelete?.();
+      } else if (res.status === 403) {
+        router.push('login');
       } else {
         throw await res.json();
       }

@@ -121,6 +121,8 @@ function ProductForm({ id }: ProductFormProps) {
               } else {
                 setProduct(await response.json());
               }
+            } else if (response.status == 403) {
+              router.push('/login');
             } else {
               throw await response.json();
             }
