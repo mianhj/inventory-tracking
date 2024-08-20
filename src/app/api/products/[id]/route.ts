@@ -67,22 +67,29 @@ export async function PUT(req: NextRequest, { params }: RouteParamType) {
     parseInt(body.stock),
     productBefore.stock
   );
+  const { reason, ...rest } = body;
+  const payload = {
+    ...rest,
+    price: parseFloat(body.price),
+    stock: parseInt(body.stock),
+  };
+
+  if (difference !== 0) {
+    payload.stockHistory = {
+      create: [
+        {
+          stock: parseInt(body.stock),
+          difference,
+          description: reason || 'Product Updated!',
+          createdById: user.id,
+        },
+      ],
+    };
+  }
 
   const product = await prisma.product.update({
     where: { id: Number(productId) },
-    data: {
-      ...body,
-      stockHistory: {
-        create: [
-          {
-            stock: parseInt(body.stock),
-            difference,
-            description: 'Product Updated!',
-            createdById: user.id,
-          },
-        ],
-      },
-    },
+    data: payload,
   });
 
   return NextResponse.json(product);

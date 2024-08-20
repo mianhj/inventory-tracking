@@ -43,7 +43,7 @@ model StockHistory {
   productId Int
   createdById Int
   
-  product Product @relation("ProductStockHistory", fields: [productId], references: [id], onDelete: Cascade)
-  
+  createdAt DateTime @default(now()) 
+  product Product @relation("ProductStockHistory", fields: [productId], references: [id], onDelete: Cascade) 
 }
 

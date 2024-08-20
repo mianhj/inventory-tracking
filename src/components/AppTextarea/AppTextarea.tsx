@@ -27,13 +27,11 @@ function AppTextarea({
 
   return (
     <div>
-      <Label className="sr-only" htmlFor={id}>
-        {label}
-      </Label>
+      <Label htmlFor={id}>{label}</Label>
       <Textarea
         id={id}
         disabled={isSubmitting}
-        value={val}
+        value={`${val}`}
         onChange={
           typeof setter === 'undefined'
             ? (e) => {

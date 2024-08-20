@@ -7,7 +7,7 @@ import { Prisma } from '@prisma/client';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const page = parseInt(searchParams.get('page') || '1');
+  const page = parseInt(searchParams.get('page') || '1') || 1;
   const limit = parseInt(searchParams.get('limit') || '10');
   const sortBy = searchParams.get('sortBy') || 'createdAt';
   const order = searchParams.get('order') === 'desc' ? 'desc' : 'asc';
@@ -55,6 +55,8 @@ export async function POST(req: NextRequest) {
   const product = await prisma.product.create({
     data: {
       ...body,
+      price: parseFloat(body.price),
+      stock: parseInt(body.stock),
       createdById: user.id,
       lastUpdatedById: user.id,
       stockHistory: {

@@ -22,7 +22,7 @@ import { Icons } from '@/components/icons';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 
 import Image from 'next/image';
-import { Trash2, Pencil } from 'lucide-react';
+import { Trash2, Pencil, History } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -40,11 +40,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useDebouncedCallback } from 'use-debounce';
 import DeleteProductModal from './DeleteProductModal';
-import { Noto_Sans_Tamil_Supplement } from 'next/font/google';
+import Link from 'next/link';
 
 export type ProductsListingProps = {};
 function ProductsListing({}: ProductsListingProps) {
@@ -58,15 +58,19 @@ function ProductsListing({}: ProductsListingProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
-  const [limit] = useState(10);
+  const [limit] = useState(5);
   const [searchInput, setSearchInput] = useState(search);
 
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
-  const debouncedSearch = useDebouncedCallback((value) => {
+  const totalPagesCount = Math.ceil(totalCount / limit);
+  const updateSearchParams = (key: string, value: string) => {
     const newParams = new URLSearchParams(window.location.search);
-    newParams.set('search', value);
+    newParams.set(key, value);
     router.replace(`?${newParams.toString()}`);
+  };
+  const debouncedSearch = useDebouncedCallback((value) => {
+    updateSearchParams('search', value);
   }, 500);
 
   const fetchProducts = useCallback(async () => {
@@ -100,10 +104,10 @@ function ProductsListing({}: ProductsListingProps) {
     {
       accessorKey: 'image',
       header: 'Image',
-      cell: () => {
+      cell: (param) => {
         return (
           <Image
-            src="https://picsum.photos/60"
+            src={param.getValue()}
             alt="Product"
             width={50}
             height={50}
@@ -135,12 +139,14 @@ function ProductsListing({}: ProductsListingProps) {
       cell: (param) => {
         return (
           <>
-            <Button className="px-2 mr-1" variant="default">
+            <Link
+              href={`/products/${param.getValue()}`}
+              className={buttonVariants({ variant: 'default' })}
+            >
               <Pencil size={18} />
-            </Button>
+            </Link>
 
             <Button
-              className="px-2"
               variant="destructive"
               onClick={() => {
                 setProductToDelete(param.row.original);
@@ -276,18 +282,23 @@ function ProductsListing({}: ProductsListingProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => {
+              updateSearchParams('page', `${page - 1}`);
+            }}
+            disabled={page <= 0}
           >
             Previous
           </Button>
 
-          {table.getPageOptions()}
+          <Button variant="default">{page + 1}</Button>
+
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => {
+              updateSearchParams('page', `${page + 1}`);
+            }}
+            disabled={totalPagesCount <= page}
           >
             Next
           </Button>

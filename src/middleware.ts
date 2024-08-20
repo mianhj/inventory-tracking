@@ -7,15 +7,19 @@ export function middleware(req: NextRequest) {
   const method = req.method;
   req.token = req.cookies.get('Authorization')?.value || '';
 
-  // Perform actions for POST or PUT requests
-  if (['POST', 'PUT', 'DELETE'].includes(method)) {
-    // If the 'authToken' cookie is missing, redirect to the login page
-    // if (!req.token) {
-    //   return NextResponse.redirect(new URL('/login', req.url));
-    // }
+  // Perform actions for POST , PUT and DELETE requests
+  if (
+    ['POST', 'PUT', 'DELETE'].includes(method) &&
+    !req.token &&
+    !req.url.includes('login')
+  ) {
+    return NextResponse.json(
+      { error: 'Please Login to perform this action' },
+      { status: 403 }
+    );
   }
 
-  // If the method is not POST or PUT, or if the cookie exists, allow the request to proceed
+  // If the method is not POST or PUT or DELETE, or if the cookie exists, allow the request to proceed
   return NextResponse.next();
 }
 

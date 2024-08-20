@@ -12,7 +12,7 @@ import _ from 'lodash';
 import AppTextarea from '@/components/AppTextarea';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
+import EventEmitter from 'reactjs-eventemitter';
 export type ProductFormProps = { id: string };
 
 function ProductForm({ id }: ProductFormProps) {
@@ -74,6 +74,7 @@ function ProductForm({ id }: ProductFormProps) {
                 price: '',
                 description: '',
                 stock: '',
+                reason: '',
               }
         }
         validationSchema={Yup.object({
@@ -82,6 +83,7 @@ function ProductForm({ id }: ProductFormProps) {
           price: Yup.number().required().label('Price'),
           stock: Yup.number().integer().required().label('Stock'),
           description: Yup.string().required().label('Description'),
+          reason: Yup.string().optional().label('Stock update reason'),
         })}
         enableReinitialize
         validateOnBlur={false}
@@ -107,12 +109,17 @@ function ProductForm({ id }: ProductFormProps) {
                 description: isAdding
                   ? `Product ${values.name} added successfully`
                   : `Product ${values.name} updated successfully`,
-                className: 'bg-red-600 text-white',
+                className: 'bg-green-600 text-white',
               });
               setTimeout(dismiss, 5000);
+
+              EventEmitter.dispatch('product-updated');
+
               if (isAdding) {
                 const data = await response.json();
                 router.replace(`/products/${data.id}`);
+              } else {
+                setProduct(await response.json());
               }
             } else {
               throw await response.json();
@@ -129,7 +136,7 @@ function ProductForm({ id }: ProductFormProps) {
           }
         }}
       >
-        {({ isSubmitting, values }) => {
+        {({ isSubmitting, values, initialValues }) => {
           return (
             <Form className="p-2">
               <div className="grid gap-2">
@@ -188,11 +195,23 @@ function ProductForm({ id }: ProductFormProps) {
                     step={1}
                   />
                 </div>
+                {id !== 'add' &&
+                parseInt(initialValues.stock) !== parseInt(values.stock) ? (
+                  <div className="grid gap-1">
+                    <AppTextarea
+                      label="Stock Update Reason"
+                      name="reason"
+                      id="reason"
+                      placeholder="Stock Update Reason"
+                    />
+                  </div>
+                ) : null}
+
                 <Button disabled={isSubmitting}>
                   {isSubmitting && (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Sign In
+                  Submit
                 </Button>
               </div>
             </Form>

@@ -29,9 +29,7 @@ function AppTextField({
 
   return (
     <div>
-      <Label className="sr-only" htmlFor={id}>
-        {label}
-      </Label>
+      <Label htmlFor={id}>{label}</Label>
       <Input
         id={id}
         disabled={isSubmitting}
