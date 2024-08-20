@@ -20,6 +20,9 @@ export const seedUsers = async () => {
   const prisma = new PrismaClient();
 
   try {
+    const existing = await prisma.user.findMany({ take: 1 });
+    if (existing.length > 0) return;
+
     await prisma.user.deleteMany();
     await prisma.user.createMany({
       data,

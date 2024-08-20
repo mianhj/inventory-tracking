@@ -149,6 +149,8 @@ export const seedProducts = async () => {
   const prisma = new PrismaClient();
 
   try {
+    const existing = await prisma.product.findMany({ take: 1 });
+    if (existing.length > 0) return;
     await prisma.product.deleteMany();
     await prisma.product.createMany({
       data: data.map((p, i) => {
@@ -157,6 +159,17 @@ export const seedProducts = async () => {
           image: `https://picsum.photos/${120 + i}`,
           createdById: 1,
           lastUpdatedById: 1,
+          stockHistory: {
+            create: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(
+              (item, index) => ({
+                stock: item,
+                difference: index % 2 == 0 ? -1 * item : item,
+                description:
+                  'Note about the stock change. Lorem Ipsum dolor sit amet',
+                createdById: 1,
+              })
+            ),
+          },
         };
       }),
     });
